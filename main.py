@@ -8,16 +8,19 @@ from flask import Flask, render_template, Response
 from flask_apscheduler import APScheduler
 
 # GPIO Pin int
-LeftButtonPin = 17
-
-# Global vars to control text prompts
-LeftButton = 0
+LeftButtonPin = 26
+LeftFrontButtonPin = 19
+RightButtonPin = 13
+RightFrontButtonPin = 6
 
 # Set raspberry GPIO pins to BCM mode
 GPIO.setmode(GPIO.BCM)
 
 # Setup GPIO pins
-GPIO.setup(LeftButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(LeftButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(LeftFrontButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(RightButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(RightFrontButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # create flask and APSceduler object
 app = Flask(__name__)
@@ -57,16 +60,20 @@ def gen():
         if ret == True:
             img = cv2.resize(img, (0, 0), fx=1, fy=1)
 
-            if (LeftButton != 0):
+            if (GPIO.input(LeftButtonPin) != 1):
                 cv2.putText(img=img, text='Left!', org=(1, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
                         color=(0, 0, 255), thickness=3)
 
-            cv2.putText(img=img, text='Right!', org=(550, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
+            if (GPIO.input(RightButtonPin) != 1):
+                cv2.putText(img=img, text='Right!', org=(550, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
                         color=(0, 0, 255), thickness=3)
-            cv2.putText(img=img, text='Front Left!', org=(125, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
-                        color=(0, 0, 255), thickness=3)
-            cv2.putText(img=img, text='Front Right!', org=(320, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
-                        color=(0, 0, 255), thickness=3)
+
+            if (GPIO.input(LeftFrontButtonPin) != 1):
+                cv2.putText(img=img, text='Front Left!', org=(125, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,                        color=(0, 0, 255), thickness=3)
+
+            if (GPIO.input(RightFrontButtonPin) != 1):
+                cv2.putText(img=img, text='Front Right!', org=(320, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=>                        color=(0, 0, 255), thickness=3)
+
             frame = cv2.imencode('.jpg', img)[1].tobytes()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -85,9 +92,9 @@ def video_feed():
 # a function that is scheduled to run
 def scheduled_task():
     # Check Collision Button
-    GPIO.input(LeftButtonPin)
-    LeftButton = GPIO.input(LeftButtonPin)
-
+    #print(GPIO.input(LeftButtonPin))
+    #LeftButton = GPIO.input(LeftButtonPin)
+    pass
 
 # add a function to the scheduled task list
 # and start the scheduler
@@ -97,4 +104,3 @@ scheduler.start()
 
 # start the app object
 app.run(host="0.0.0.0", port=80)
-
