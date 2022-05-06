@@ -1,7 +1,8 @@
 # Importing Library's
+import RPi.GPIO as GPIO
 import time
 import cv2
-#import RPi.GPIO as GPIO
+
 
 from flask import Flask, render_template, Response
 from flask_apscheduler import APScheduler
@@ -13,10 +14,10 @@ LeftButtonPin = 17
 LeftButton = 0
 
 # Set raspberry GPIO pins to BCM mode
-#GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)
 
 # Setup GPIO pins
-#GPIO.setup(LeftButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(LeftButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 # create flask and APSceduler object
 app = Flask(__name__)
@@ -84,8 +85,8 @@ def video_feed():
 # a function that is scheduled to run
 def scheduled_task():
     # Check Collision Button
-    #GPIO.input(LeftButtonPin)
-    #LeftButton = GPIO.input(LeftButtonPin)
+    GPIO.input(LeftButtonPin)
+    LeftButton = GPIO.input(LeftButtonPin)
 
 
 # add a function to the scheduled task list
