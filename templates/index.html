@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <script src="/static/js/index.js"></script>
+  <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <head>
+
+    <title>Control Panel</title>
+
+  </head>
+
+  <body>
+    <center>
+
+      <img class="NamePlate" src="/static/img/NamePlate.png">
+      <br>
+
+      <img class="" src="{{ url_for('video_feed') }}">
+      <br>
+      <br>
+
+      <button onclick=sendForward()>↑</button><br>
+      Forward<br>
+      <br>
+      <button onclick=sendLeft()>←</button>&nbsp;&nbsp;&nbsp;&nbsp;<button onclick=sendStop()>•</button>&nbsp;&nbsp;&nbsp;&nbsp;<button onclick=sendRight()>→</button><br>
+      Left&nbsp;&nbsp;&nbsp;&nbsp;Stop&nbsp;&nbsp;&nbsp;&nbsp;Right<br>
+      <br>
+      <button onclick=sendBackward()>↓</button><br>
+      Backward
+      <br>
+      <br>
+      <p><a href="https://github.com/Jordan1678/Mop-Bot">GitHub</a></p>
+
+    </center>
+  </body>
+</html>
