@@ -7,28 +7,27 @@ import cv2
 from flask import Flask, render_template, Response
 from flask_apscheduler import APScheduler
 
-# GPIO Pin int
-LeftButtonPin = 26
-LeftFrontButtonPin = 19
-RightButtonPin = 13
-RightFrontButtonPin = 6
+
+# GPIO Pin int list
+LeftBumper = 26
+LeftFrontBumper = 19
+RightBumper = 13
+RightFrontBumper = 6
 
 # Set raspberry GPIO pins to BCM mode
 GPIO.setmode(GPIO.BCM)
 
 # Setup GPIO pins
-GPIO.setup(LeftButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(LeftFrontButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(RightButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(LeftBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(LeftFrontBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(RightBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(RightFrontButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# create flask and APSceduler object
+# create flask and APSceduler object and
+# point scheduler to the flask object
 app = Flask(__name__)
 scheduler = APScheduler()
-
-# point scheduler to the flask object
 scheduler.init_app(app)
-
 
 
 # creating route to the index page
@@ -47,8 +46,8 @@ def gen():
     # 480p over 720p because the raspberry pi 3 b+ (The one I'm using)
     # doesn't have enough compute power to render frames at a steady
     # frame rate
-    cap.set(3, 640)
-    cap.set(4, 480)
+    cap.set(3, 640) # vertical cap
+    cap.set(4, 480) # horizontal cap
 
     # Read until video is completed
     while (cap.isOpened()):
@@ -59,21 +58,27 @@ def gen():
         # this is where if you want to draw on frames you add that here
         if ret == True:
             img = cv2.resize(img, (0, 0), fx=1, fy=1)
-
-            if (GPIO.input(LeftButtonPin) != 1):
+        
+            # detect of bumper is compressed then write which (if any) bumpers are compressed on the frames
+            # Side Note: These buttons must be setup with the 3rd arg [pull_up_down=GPIO.PUD_UP] I've tried 
+            # [GPIO.PUD_DOWN] but it doesn't work for some reason so 1 = decompressed 0 = compressed
+            if (GPIO.input(LeftBumper) != 1):
                 cv2.putText(img=img, text='Left!', org=(1, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
                         color=(0, 0, 255), thickness=3)
 
-            if (GPIO.input(RightButtonPin) != 1):
+            if (GPIO.input(RightBumper) != 1):
                 cv2.putText(img=img, text='Right!', org=(550, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
                         color=(0, 0, 255), thickness=3)
 
-            if (GPIO.input(LeftFrontButtonPin) != 1):
-                cv2.putText(img=img, text='Front Left!', org=(125, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,                        color=(0, 0, 255), thickness=3)
+            if (GPIO.input(LeftFrontBumper) != 1):
+                cv2.putText(img=img, text='Front Left!', org=(125, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
+                            color=(0, 0, 255), thickness=3)
 
-            if (GPIO.input(RightFrontButtonPin) != 1):
-                cv2.putText(img=img, text='Front Right!', org=(320, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=>                        color=(0, 0, 255), thickness=3)
+            if (GPIO.input(RightFrontBumper) != 1):
+                cv2.putText(img=img, text='Front Right!', org=(320, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
+                            color=(0, 0, 255), thickness=3)
 
+            # convert the frame to bianry and sends it 
             frame = cv2.imencode('.jpg', img)[1].tobytes()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -89,16 +94,17 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-# a function that is scheduled to run
+# a function that is scheduled to run after a set
+# amount of time You have to becarefull what you 
+# put in here as it can completely screw the video
+# feed everytime this runs the video stops untill 
+# its finished
 def scheduled_task():
-    # Check Collision Button
-    #print(GPIO.input(LeftButtonPin))
-    #LeftButton = GPIO.input(LeftButtonPin)
     pass
 
 # add a function to the scheduled task list
 # and start the scheduler
-scheduler.add_job(func=scheduled_task, trigger="interval", seconds=.50, id="TEST")
+scheduler.add_job(func=scheduled_task, trigger="interval", seconds=5, id="Gae")
 scheduler.start()
 
 
