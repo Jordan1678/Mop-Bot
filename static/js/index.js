@@ -1,3 +1,11 @@
+/*
+Here I use the XMR library to send a
+POST to the server to controll the 
+robot each function here is the exact 
+same only thing that changes is the url
+
+*/
+
 // Post Forward
 function sendForward () {
     var url = "/Forward";
