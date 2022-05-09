@@ -1,7 +1,7 @@
 # Mop-Bot
 A Robot that Mops the robotics class
 
-## Setup Pi
+## Seting up your Raspberry Pi
 
 This should work on all Pi's
 This also assumes you have python already installed
