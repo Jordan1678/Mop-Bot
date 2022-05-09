@@ -21,7 +21,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(LeftBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(LeftFrontBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(RightBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(RightFrontButtonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(RightFrontBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # create flask and APSceduler object and
 # point scheduler to the flask object
