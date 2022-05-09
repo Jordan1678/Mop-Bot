@@ -49,7 +49,7 @@ def gen():
     cap.set(3, 640) # vertical cap
     cap.set(4, 480) # horizontal cap
 
-    # Read until video is completed
+    # Read until frame is completed
     while (cap.isOpened()):
 
         # Capture frame-by-frame
@@ -59,7 +59,7 @@ def gen():
         if ret == True:
             img = cv2.resize(img, (0, 0), fx=1, fy=1)
         
-            # detect of bumper is compressed then write which (if any) bumpers are compressed on the frames
+            # detect if bumper is compressed then write which (if any) bumpers are compressed on the frames
             # Side Note: These buttons must be setup with the 3rd arg [pull_up_down=GPIO.PUD_UP] I've tried 
             # [GPIO.PUD_DOWN] but it doesn't work for some reason so 1 = decompressed 0 = compressed
             if (GPIO.input(LeftBumper) != 1):
