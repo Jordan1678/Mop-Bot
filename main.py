@@ -8,11 +8,16 @@ from flask import Flask, render_template, Response
 from flask_apscheduler import APScheduler
 
 
-# GPIO Pin int list
+# GPIO Pin Setup
 LeftBumper = 26
 LeftFrontBumper = 19
 RightBumper = 13
 RightFrontBumper = 6
+
+LeftMotor = 18
+RightMotor = 27
+BrushMotor = 24
+WaterPump = "place holding string"
 
 # Set raspberry GPIO pins to BCM mode
 GPIO.setmode(GPIO.BCM)
