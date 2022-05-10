@@ -1,3 +1,0 @@
-"picamera[array]"
-Flask
-Flask-APScheduler
