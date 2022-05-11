@@ -12,10 +12,11 @@ from flask_apscheduler import APScheduler
 # if started with the sys arg 
 # debug it will enable a few 
 # things to help with debuging
-if sys.argv[1].lower() == "debug":
-    debug = true
+try:
+    if sys.argv[1].lower() == "debug":
+        debug = true
     
-else:
+except:
     debug = false
 
     
@@ -38,6 +39,11 @@ GPIO.setup(LeftBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(LeftFrontBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(RightBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(RightFrontBumper, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+# Set Global var
+LeftMotorSpeed = 0
+RightMotorSpeed = 0
+BrushMotorSpeed = 0
 
 # create flask and APSceduler object and
 # point scheduler to the flask object
