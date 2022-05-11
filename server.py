@@ -2,12 +2,23 @@
 import RPi.GPIO as GPIO
 import time
 import cv2
+import sys
 
 
 from flask import Flask, render_template, Response
 from flask_apscheduler import APScheduler
 
 
+# if started with the sys arg 
+# debug it will enable a few 
+# things to help with debuging
+if sys.argv[1].lower() == "debug":
+    debug = true
+    
+else:
+    debug = false
+
+    
 # GPIO Pin Setup
 LeftBumper = 26
 LeftFrontBumper = 19
@@ -82,6 +93,10 @@ def gen():
             if (GPIO.input(RightFrontBumper) != 1):
                 cv2.putText(img=img, text='Front Right!', org=(320, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
                             color=(0, 0, 255), thickness=3)
+                
+            if (debug):
+                cv2.putText(img=img, text='Debug Mode: ON', org=(1, 465), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
+                            color=(0, 0, 255), thickness=3)
 
             # convert the frame to bianry and sends it 
             frame = cv2.imencode('.jpg', img)[1].tobytes()
@@ -105,7 +120,9 @@ def video_feed():
 # feed everytime this runs the video stops untill 
 # its finished
 def scheduled_task():
-    pass
+    if (debug):
+        print("Debug List:")
+
 
 # add a function to the scheduled task list
 # and start the scheduler
