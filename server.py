@@ -8,17 +8,6 @@ import sys
 from flask import Flask, render_template, Response
 from flask_apscheduler import APScheduler
 
-
-# if started with the sys arg 
-# debug it will enable a few 
-# things to help with debuging
-try:
-    if sys.argv[1].lower() == "debug":
-        debug = true
-    
-except:
-    debug = false
-
     
 # GPIO Pin Setup
 LeftBumper = 26
@@ -26,10 +15,6 @@ LeftFrontBumper = 19
 RightBumper = 13
 RightFrontBumper = 6
 
-LeftMotor = 18
-RightMotor = 27
-BrushMotor = 24
-WaterPump = "place holding string"
 
 # Set raspberry GPIO pins to BCM mode
 GPIO.setmode(GPIO.BCM)
@@ -126,8 +111,7 @@ def video_feed():
 # feed everytime this runs the video stops untill 
 # its finished
 def scheduled_task():
-    if (debug):
-        print("Debug List:")
+    pass
 
 
 # add a function to the scheduled task list
