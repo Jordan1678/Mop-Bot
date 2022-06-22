@@ -114,11 +114,11 @@ def scheduled_task():
     pass
 
 
-# add a function to the scheduled task list
-# and start the scheduler
-scheduler.add_job(func=scheduled_task, trigger="interval", seconds=5, id="Gae")
-scheduler.start()
+if(__name__ == "__main__")
+    # add a function to the scheduled task list
+    # and start the scheduler
+    scheduler.add_job(func=scheduled_task, trigger="interval", seconds=5, id="Gae")
+    scheduler.start()
 
-
-# start the app object
-app.run(host="0.0.0.0", port=80)
+    # start the flask app object
+    app.run(host="0.0.0.0", port=80)
